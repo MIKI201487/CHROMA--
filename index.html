@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale: 1.0">
+    <title>Claim Your Chroma Here</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fff;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 600px;
+            padding: 30px;
+            border: 2px solid black;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #007BFF;
+        }
+
+        h2 {
+            font-size: 20px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            font-size: 16px;
+            margin: 10px 0;
+            text-align: left;
+            width: 100%;
+        }
+
+        input {
+            padding: 8px;
+            width: 100%;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .result {
+            font-size: 18px;
+            color: green;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 25px;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #4caf50;
+            border-radius: 5px;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+            color: white;
+        }
+
+        .done-message {
+            font-size: 30px;
+            color: green;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Claim Your Chroma Here</h1>
+        <h2>Form to Get Mysticals</h2>
+        <form id="claimForm">
+            <label for="blooketName">Blooket Name</label>
+            <input type="text" id="blooketName" name="blooketName" placeholder="Enter your Blooket Name" required>
+
+            <label for="mysticalChoice">Which mystical, chroma, or pack would you like to have?</label>
+            <input type="text" id="mysticalChoice" name="mysticalChoice" placeholder="Type your mystical, chroma, or pack choice" required>
+
+            <label for="amount">Amount of Each Blook</label>
+            <input type="number" id="amount" name="amount" placeholder="Enter amount" required min="1">
+        </form>
+        <!-- Result message -->
+        <div id="resultMessage" class="result"></div>
+
+        <!-- Progress bar container -->
+        <div id="progressContainer" class="progress-container" style="display: none;">
+            <div id="progressBar" class="progress-bar"></div>
+            <div id="progressText" class="progress-text">Loading 1/92</div>
+        </div>
+
+        <!-- Done message -->
+        <div id="doneMessage" class="done-message" style="display: none;">Done</div>
+    </div>
+
+    <script>
+        // Get form, result message, and progress elements
+        const form = document.getElementById("claimForm");
+        const resultMessage = document.getElementById("resultMessage");
+        const progressContainer = document.getElementById("progressContainer");
+        const progressBar = document.getElementById("progressBar");
+        const progressText = document.getElementById("progressText");
+        const doneMessage = document.getElementById("doneMessage");
+
+        // Function to trigger the result message and progress bar when the form is filled
+        function checkFormAndShowResult() {
+            const blooketName = document.getElementById("blooketName").value.trim();
+            const mysticalChoice = document.getElementById("mysticalChoice").value.trim();
+            const amount = document.getElementById("amount").value.trim();
+
+            // Ensure all fields are filled out
+            if (blooketName && mysticalChoice && amount) {
+                // Display the result message at the bottom
+                resultMessage.textContent = `This website has given ${amount} ${mysticalChoice} to ${blooketName}, Your key is generating...`;
+                
+                // Show the progress bar
+                progressContainer.style.display = 'block';
+
+                // Simulate the progress bar filling up from 1 to 92
+                let progress = 1;
+                const totalSteps = 92;
+                const interval = setInterval(() => {
+                    progress++;
+                    progressBar.style.width = `${(progress / totalSteps) * 100}%`;
+                    progressText.textContent = `Loading ${progress}/92`;
+
+                    // Once progress reaches 92, stop the interval and show "Done" at the top
+                    if (progress >= totalSteps) {
+                        clearInterval(interval);
+                        // Show Done message at the top
+                        doneMessage.style.display = 'block';
+                        
+                        // Delay before redirecting to Blooket
+                        setTimeout(() => {
+                            window.location.href = "https://www.blooket.com"; // Redirect to Blooket
+                        }, 1000); // 1-second delay before redirect
+                    }
+                }, 100); // Update progress every 100 milliseconds
+            } else {
+                resultMessage.textContent = ''; // Clear result message if form is incomplete
+                progressContainer.style.display = 'none'; // Hide progress bar if form is incomplete
+            }
+        }
+
+        // Add an event listener for the form input changes to check for full form
+        form.addEventListener("input", () => {
+            checkFormAndShowResult();
+        });
+    </script>
+</body>
+</html>
